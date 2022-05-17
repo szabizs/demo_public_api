@@ -1,0 +1,71 @@
+version: "3.7"
+services:
+
+    # PHP Service
+    app:
+        build:
+            args:
+                user: root
+                uid: 1000
+            context: ./
+            dockerfile: Dockerfile
+        image: demo
+        container_name: demo-app
+        restart: unless-stopped
+        working_dir: /var/www/
+        stdin_open: true
+        tty: true
+        environment:
+            - CHOKIDAR_USEPOLLING=true
+            - PHP_IDE_CONFIG=serverName=XdebugServer
+            - DEBUG=1
+        volumes:
+            - ./:/var/www:delegated
+            - ./:/usr/src/app:cached
+        ports:
+            - "9015:9000"
+        depends_on:
+            - 'mariadb'
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
+        networks:
+            - demo
+
+    # Database service
+    mariadb:
+        image: mariadb:10.5
+        container_name: demo-db
+        restart: unless-stopped
+        ports:
+            - 3308:3306
+        volumes:
+            - "/var/lib/mysql/data"
+            - "/var/lib/mysql/logs"
+            - /var/docker/mariadb/conf:/etc/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: "root"
+            MYSQL_DATABASE: "demo"
+            MYSQL_USER: "root"
+            MYSQL_PASSWORD: "root"
+        networks:
+            - demo
+
+    # Nginx service
+    nginx-demo:
+        image: nginx:1.17-alpine
+        container_name: demo-nginx
+        restart: unless-stopped
+        ports:
+            - "8020:80"
+        depends_on:
+            - app
+            - mariadb
+        volumes:
+            - ./:/var/www:delegated
+            - ./docker-compose/nginx:/etc/nginx/conf.d
+        networks:
+            - demo
+
+networks:
+    demo:
+        driver: bridge
