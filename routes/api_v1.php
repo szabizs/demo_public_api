@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CategoryResourceController;
 use App\Http\Controllers\UserController;
 use App\Http\Resources\UserResource;
 use App\Models\User;
@@ -24,5 +25,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::middleware('auth:sanctum')->group(function() {
 
     Route::apiResource('user', UserController::class)->only(['show','store','update','destroy']);
-
+    Route::apiResource('category', CategoryResourceController::class)->only(['show','store','update','destroy']);
 });
