@@ -65,6 +65,20 @@ services:
             - ./docker-compose/nginx:/etc/nginx/conf.d
         networks:
             - demo
+    npm:
+        image: node:14-alpine
+        container_name: demo-npm
+        volumes:
+            - .:/var/www
+        working_dir: /var/www
+        entrypoint: [ 'npm' ]
+        networks:
+            - demo
+        # Add these lines:
+        ports:
+            - 3000:3000
+            - 3001:3001
+            - 8080:8080
 
 networks:
     demo:
