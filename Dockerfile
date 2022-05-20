@@ -25,6 +25,13 @@ RUN pecl install xdebug \
 
 RUN docker-php-ext-install exif pdo pdo_mysql opcache
 
+RUN apt-get update && apt-get install -y \
+    software-properties-common \
+    npm
+RUN npm install npm@7 -g && \
+    npm install n -g && \
+    n latest
+
 RUN curl -sS https://getcomposer.org/installer | php -- \
     --install-dir=/usr/local/bin --filename=composer
 
