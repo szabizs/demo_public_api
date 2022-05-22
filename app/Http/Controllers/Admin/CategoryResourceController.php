@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
+use Inertia\Inertia;
 
 class CategoryResourceController extends Controller
 {
@@ -19,6 +21,10 @@ class CategoryResourceController extends Controller
      */
     public function index(Category $category)
     {
+        return Inertia::render('Admin/Categories', [
+            'categoryCount' => Category::query()->count(),
+            'categories' => Category::where('parent_id',0)->with(['childrenRecursive'])->get(),
+        ]);
     }
 
     /**
@@ -29,29 +35,16 @@ class CategoryResourceController extends Controller
     public function show(Category $category)
     {
         try {
-            $categoryData = Category::with(['childrenRecursive'])
-                ->where('parent_id', $category->id)
-                ->select(['id', 'parent_id', 'name', 'slug'])
-                ->get();
-            if($categoryData->count() > 0) {
+//                return Inertia::share('categoryData', $categoryData);
                 return response()->api(
                     is_success: true,
                     message: 'Results for the current category',
                     description: $this->description,
                     data: [
-                        'category' => [
-                            $categoryData
-                        ]
-                    ]
+                        'category' => $category
+                    ],
+                    code: 200
                 );
-            }
-
-
-            return response()->api(
-                is_success: false,
-                message: 'Category could not be found',
-                description: $this->description,
-            );
         } catch (\Exception $e) {
             return response()->api(
                 is_success: false,
@@ -101,9 +94,11 @@ class CategoryResourceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Category $category)
     {
-        //
+        if($category->update($request->all())) {
+            return Redirect::route('admin.categories.index');
+        }
     }
 
     /**

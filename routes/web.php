@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CategoryResourceController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -27,9 +28,13 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+
 Route::middleware(['auth', 'verified'])->name('admin.')->prefix('admin')->group(function() {
-    Route::get('/categories', function () {
-        return Inertia::render('AdminCategories');
-    })->name('categories');
+
+    Route::resource('categories', CategoryResourceController::class);
+
 });
+
+
 require __DIR__.'/auth.php';
