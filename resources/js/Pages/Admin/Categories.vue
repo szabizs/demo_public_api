@@ -1,7 +1,7 @@
 <script setup>
 import { Head } from '@inertiajs/inertia-vue3';
 import {store} from "@/store";
-import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
+import BreezeAuthenticatedAdminLayout from '@/Layouts/AuthenticatedAdmin.vue';
 import BreezeButton from '@/Components/Button';
 import BreezeInput from '@/Components/Input';
 import IconDown from "@/Components/Icons/Down";
@@ -13,7 +13,7 @@ import {useSelectCategory} from "@/Helpers/SelectCategory";
 <template>
     <Head title="Categories" />
 
-    <BreezeAuthenticatedLayout>
+    <BreezeAuthenticatedAdminLayout>
         <template #header>
 
 
@@ -70,7 +70,7 @@ import {useSelectCategory} from "@/Helpers/SelectCategory";
                 </div>
             </div>
         </div>
-    </BreezeAuthenticatedLayout>
+    </BreezeAuthenticatedAdminLayout>
 </template>
 
 <script>

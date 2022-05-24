@@ -1,6 +1,10 @@
 <?php
 
 use App\Http\Controllers\Admin\CategoryResourceController;
+use App\Http\Controllers\Admin\PermissionsResourceController;
+use App\Http\Controllers\Admin\RolesResourceController;
+use App\Http\Controllers\Admin\UserResourceController;
+use App\Http\Controllers\Admin\UserTokenGeneratorController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -25,15 +29,19 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::middleware(['auth', 'verified'])->group(function() {
+    Route::get('/dashboard', function () {
+        return Inertia::render('Dashboard');
+    })->name('dashboard');
 
 
-Route::middleware(['auth', 'verified'])->name('admin.')->prefix('admin')->group(function() {
-
-    Route::resource('categories', CategoryResourceController::class);
-
+    Route::middleware(['role:Super Admin'])->name('admin.')->prefix('admin')->group(function () {
+        Route::middleware(['permission:can manage categories'])->resource('categories', CategoryResourceController::class);
+        Route::resource('users', UserResourceController::class);
+        Route::post('users/{user}/generate-token', UserTokenGeneratorController::class)->name('users.generate_token');
+        Route::resource('permissions', PermissionsResourceController::class);
+        Route::resource('roles', RolesResourceController::class);
+    });
 });
 
 

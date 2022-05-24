@@ -9,7 +9,7 @@ import IconUp from "@/Components/Icons/Up";
 <template>
     <ul role="menu" :style="style">
         <li v-for="category in tree.children_recursive" :key="category.id" :class="{ 'text-blue-800': tree.children_recursive !== undefined }">
-            <div class="flex items-center w-full font-normal text-gray-900 p-1 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700" :class="{'p-1 font-bold w-full font-normal text-gray-900 p-1 rounded-lg transition duration-75 bg-gray-100': store.selectedCategory.id === category.id}">
+            <div class="flex items-center w-full font-normal text-gray-900 p-1 pl-2 m-1 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700" :class="{'p-1 font-bold w-full font-normal text-gray-900 p-1 rounded-lg transition duration-75 bg-gray-100': store.selectedCategory.id === category.id}">
                 <a @click="useSelectCategory(category)" href="#" class="h-6 flex items-center justify-between w-full hover:font-bold">
                     {{ category.name }}
                     <!-- down -->

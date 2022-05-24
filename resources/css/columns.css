@@ -1,0 +1,11 @@
+.column-list-to-tw {
+    column-count: 2;
+}
+
+.column-list-to-four {
+    column-count: 4;
+}
+
+.column-list-to-six {
+    column-count: 6;
+}
