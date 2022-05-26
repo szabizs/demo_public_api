@@ -39,7 +39,7 @@ class PermissionsResourceController extends Controller
 	public function store(StorePermissionRequest $request)
 	{
         Permission::create([
-            'name' => $request->name,
+            'name' => strtolower($request->name),
         ]);
 
         return Redirect::route('admin.permissions.index')->with('success', 'Permission has been created.');
@@ -64,7 +64,7 @@ class PermissionsResourceController extends Controller
 
 	public function update(UpdatePermissionRequest $request, Permission $permission)
 	{
-        $permission->update(['name' => $request->get('name')]);
+        $permission->update(['name' => strtolower($request->get('name'))]);
 		$permission->users()->sync($request->get('users'));
         return Redirect::route('admin.permissions.show', $permission)->with('success', 'Permission has been successfully updated.');
 	}
