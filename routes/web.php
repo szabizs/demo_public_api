@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\PermissionsResourceController;
 use App\Http\Controllers\Admin\RolesResourceController;
 use App\Http\Controllers\Admin\UserResourceController;
 use App\Http\Controllers\Admin\UserTokenGeneratorController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -20,7 +21,7 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
+Route::domain('apip.test')->get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
@@ -28,21 +29,10 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
-
-Route::middleware(['auth', 'verified', 'check_permission'])->group(function() {
+Route::domain('apip.test')->middleware(['auth', 'verified', 'check_permission'])->group(function() {
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
-
-
-    Route::middleware(['role:Super Admin'])->name('admin.')->prefix('admin')->group(function () {
-        Route::middleware(['permission:can manage categories'])->resource('categories', CategoryResourceController::class);
-        Route::resource('users', UserResourceController::class);
-        Route::post('users/{user}/generate-token', UserTokenGeneratorController::class)->name('users.generate_token');
-        Route::resource('permissions', PermissionsResourceController::class);
-        Route::resource('roles', RolesResourceController::class);
-    });
 });
-
 
 require __DIR__.'/auth.php';

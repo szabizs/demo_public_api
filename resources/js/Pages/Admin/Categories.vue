@@ -7,6 +7,65 @@ import BreezeInput from '@/Components/Input';
 import IconDown from "@/Components/Icons/Down";
 import IconUp from "@/Components/Icons/Up";
 import {useSelectCategory} from "@/Helpers/SelectCategory";
+import {watch, computed, ref, reactive} from "vue";
+import {Inertia} from '@inertiajs/inertia'
+
+const state = reactive({
+    lastSelectedCategory: {},
+    editing: false,
+    categoryData: {},
+})
+
+const storeSelectedCategory = computed(() => {
+    state.lastSelectedCategory = store.selectedCategory
+    return store.selectedCategory;
+});
+
+const storeSelectedParentCategory = computed(() => {
+    state.lastSelectedCategory = store.selectedCategory
+    return store.selectedParentCategory;
+});
+
+const storeSelectedCategoryNodes = computed(() => {
+    return store.selectedCategoryNodes;
+});
+
+const clearEdit = () => {
+    state.editing = false
+    state.categoryData = {}
+}
+
+const cancelEdit = () => {
+    state.editing = false
+    state.categoryData = {}
+}
+
+const edit = (category) => {
+    state.editing = true
+    state.categoryData =  Object.assign({}, category)
+}
+
+const save = () => {
+
+    Inertia.patch(route('admin.categories.update', state.categoryData), {
+        name: state.categoryData.name,
+    }, {
+        onSuccess() {
+            useSelectCategory(state.categoryData)
+            clearEdit()
+        }
+    })
+}
+
+watch(storeSelectedCategory, (currentValue, oldValue) => {
+    state.lastSelectedCategory = currentValue
+    clearEdit()
+},{ deep: true });
+
+watch(storeSelectedParentCategory, (currentValue, oldValue) => {
+    state.lastSelectedCategory = currentValue
+    clearEdit()
+},{ deep: true });
 
 </script>
 
@@ -26,6 +85,7 @@ import {useSelectCategory} from "@/Helpers/SelectCategory";
         <div class="py-4">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 flow-root">
                 <breeze-button class="float-right">Add new</breeze-button>
+                {{ editing }}
             </div>
         </div>
 
@@ -37,35 +97,35 @@ import {useSelectCategory} from "@/Helpers/SelectCategory";
                     <ul>
                     <li v-for="category in categories" :key="category.id">
                         <div class="flex items-center w-full font-normal text-gray-900 p-1 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
-                            <a @click="useSelectCategory(category)" class="h-6 flex items-center justify-between w-full hover:font-bold cursor-pointer" :class="{'font-bold rounded-sm': store.selectedParentCategoryId === category.id}">
+                            <a @click="useSelectCategory(category)" class="h-6 flex items-center justify-between w-full hover:font-bold cursor-pointer" :class="{'font-bold rounded-sm': storeSelectedParentCategory.id === category.id}">
                                 {{ category.name }}
                                 <div>
                                     <!-- down -->
-                                    <icon-down class="absolute -mt-3 -ml-6" v-if="!store.selectedCategoryNodes.includes(category.id) && category.children_recursive.length > 0"></icon-down>
+                                    <icon-down class="absolute -mt-3 -ml-6" v-if="!storeSelectedCategoryNodes.includes(category.id) && category.children_recursive.length > 0"></icon-down>
                                     <!-- up -->
-                                    <icon-up class="absolute -mt-3 -ml-5" v-if="store.selectedCategoryNodes.includes(category.id) && category.children_recursive.length > 0"></icon-up>
+                                    <icon-up class="absolute -mt-3 -ml-5" v-if="storeSelectedCategoryNodes.includes(category.id) && category.children_recursive.length > 0"></icon-up>
                                 </div>
                             </a>
                         </div>
-                        <category-tree v-if="store.selectedCategoryNodes.includes(category.id)" :tree="category" :indent="newIndent" />
+                        <category-tree v-if="storeSelectedCategoryNodes.includes(category.id)" :tree="category" :indent="newIndent" />
                     </li>
                     </ul>
                 </div>
                 <div class="w-7/12 lg:w-9/12 p-2 bg-white overflow-hidden shadow-sm sm:rounded-lg bg-white text-xs">
-                    <h3 v-if="Object.keys(lastSelectedCategory).length === 0" class="p-2 border-b text-base my-2">Overview</h3>
-                    <h3 v-if="Object.keys(lastSelectedCategory).length !== 0" class="p-2 border-b text-base my-2">Overview: <span class="text-teal-600 font-bold">{{ lastSelectedCategory.name }}</span></h3>
-                    <div class="flex items-center space-x-2 py-2" v-if="Object.keys(lastSelectedCategory).length !== 0">
-                        <breeze-button v-if="!editing" class="bg-teal-600 text-white" @click="edit">edit</breeze-button>
-                        <breeze-button v-if="!editing" class="bg-red-600 text-white">delete</breeze-button>
-                        <breeze-button v-if="editing" @click="save" class="bg-green-600 text-white">save</breeze-button>
-                        <breeze-button v-if="editing" @click="cancelEdit" class="bg-gray-600 text-white">cancel</breeze-button>
+                    <h3 v-if="Object.keys(storeSelectedCategory).length === 0" class="p-2 border-b text-base my-2">Overview</h3>
+                    <h3 v-if="Object.keys(storeSelectedCategory).length !== 0" class="p-2 border-b text-base my-2">Overview: <span class="text-teal-600 font-bold">{{ storeSelectedCategory.name }}</span></h3>
+                    <div class="flex items-center space-x-2 py-2" v-if="Object.keys(storeSelectedCategory).length > 1">
+                        <breeze-button v-if="!state.editing" class="bg-teal-600 text-white" @click="edit(storeSelectedCategory)">edit</breeze-button>
+                        <breeze-button v-if="!state.editing" class="bg-red-600 text-white">delete</breeze-button>
+                        <breeze-button v-if="state.editing" @click="save" class="bg-green-600 text-white">save</breeze-button>
+                        <breeze-button v-if="state.editing" @click="cancelEdit" class="bg-gray-600 text-white">cancel</breeze-button>
                     </div>
                     <div>
-                        <span v-if="Object.keys(lastSelectedCategory).length === 0" class="text-gray-400">Please select a category for further actions.</span>
-                        <span v-if="Object.keys(lastSelectedCategory).length !== 0" class="text-gray-400">Please select an action for the selected category.</span>
+                        <span v-if="Object.keys(storeSelectedCategory).length === 0" class="text-gray-400">Please select a category for further actions.</span>
+                        <span v-if="Object.keys(storeSelectedCategory).length !== 0" class="text-gray-400">Please select an action for the selected category.</span>
                     </div>
-                    <div v-if="Object.keys(categoryData).length > 0">
-                        <BreezeInput id="name" type="text" class="mt-1 block w-full" v-model="categoryData.name" required autofocus autocomplete="name" />
+                    <div v-if="state.categoryData.id !== undefined">
+                        <BreezeInput id="name" type="text" class="mt-1 block w-full" v-model="state.categoryData.name" required autofocus autocomplete="name" />
                     </div>
                 </div>
             </div>
@@ -92,41 +152,6 @@ export default {
     data() {
         return {
             indent: 15,
-            categoryData: {},
-            lastSelectedCategory: {},
-            editing: false,
-        }
-    },
-    watch: {
-        'store.selectedCategory'(newVal, oldVal) {
-            this.lastSelectedCategory = store.selectedCategory
-            this.clearEdit()
-        },
-        'store.selectedParentCategory'(newVal, oldVal) {
-            this.lastSelectedCategory = store.selectedParentCategory
-            this.clearEdit()
-        }
-    },
-    methods: {
-        edit() {
-            this.editing = true
-            this.categoryData =  Object.assign({}, this.lastSelectedCategory)
-        },
-        clearEdit() {
-            this.editing = false
-            this.categoryData = {}
-        },
-        cancelEdit() {
-            this.clearEdit()
-        },
-        save() {
-            this.$inertia.patch(route('admin.categories.update', this.categoryData.id), {
-                name: this.categoryData.name,
-            }, {
-                onSuccess() {
-                    this.clearEdit()
-                }
-            })
         }
     }
 }

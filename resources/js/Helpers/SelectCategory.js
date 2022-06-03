@@ -10,13 +10,12 @@ export function useSelectCategory(category) {
         }
     }
 
-    if(store.selectedCategory.id === category.id) {
-        store.selectedCategory = {}
-    } else {
-        if(category.children_recursive.length === 0) {
-            store.selectedCategory = category
-        }
-    }
+    // if(store.selectedCategory.id === category.id) {
+    //     store.selectedCategory = {}
+    // } else {
+        // if(category.children_recursive.length === 0) {
+        // }
+    // }
 
     if(!store.selectedCategoryNodes.includes(category.id)) {
         store.selectedCategoryNodes.push(category.id)
@@ -24,4 +23,6 @@ export function useSelectCategory(category) {
         let index = store.selectedCategoryNodes.indexOf(category.id)
         store.selectedCategoryNodes.splice(index, store.selectedCategoryNodes.length);
     }
+
+    store.selectedCategory = category
 }

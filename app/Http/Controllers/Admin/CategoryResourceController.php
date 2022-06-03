@@ -94,9 +94,9 @@ class CategoryResourceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update(Category $category)
     {
-        if($category->update($request->all())) {
+        if($category->update(request()->all())) {
             return Redirect::route('admin.categories.index');
         }
     }
