@@ -8,6 +8,10 @@ import BreezeResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/inertia-vue3';
 
 const showingNavigationDropdown = ref(false);
+
+const goToAdmin = () => {
+    window.location = route('admin.dashboard')
+}
 </script>
 
 <template>
@@ -30,9 +34,6 @@ const showingNavigationDropdown = ref(false);
                                 <BreezeNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </BreezeNavLink>
-                                <BreezeNavLink :href="route('admin.categories.index')" :active="route().current('admin.categories')">
-                                    Categories
-                                </BreezeNavLink>
                             </div>
                         </div>
 
@@ -51,8 +52,10 @@ const showingNavigationDropdown = ref(false);
                                             </button>
                                         </span>
                                     </template>
-
                                     <template #content>
+                                        <BreezeDropdownLink v-if="$page.props.acl.is_admin" @click="goToAdmin" as="button" replace>
+                                            Admin
+                                        </BreezeDropdownLink>
                                         <BreezeDropdownLink :href="route('logout')" method="post" as="button">
                                             Log Out
                                         </BreezeDropdownLink>

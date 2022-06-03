@@ -27,7 +27,7 @@ class CheckPermission {
             (new CheckPermissionService(name: $routeName));
 
     		if($user->hasRole('Super Admin')) {
-//    			$hasPermission = true;
+    			$hasPermission = true;
 			}
 
             if($user->can($request->route()->getName())) {

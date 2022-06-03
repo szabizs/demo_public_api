@@ -25,5 +25,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::middleware('auth:sanctum')->group(function() {
 
     Route::middleware(['permission:can manage users'])->apiResource('user', UserController::class)->only(['show','store','update','destroy']);
-    Route::apiResource('category', CategoryResourceController::class)->only(['show','store','update','destroy']);
+//    Route::apiResource('category', CategoryResourceController::class)->only(['show','store','update','destroy']);
 });

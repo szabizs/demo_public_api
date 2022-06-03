@@ -38,6 +38,9 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'acl' => [
+                'is_admin' => (auth()->check() ? auth()->user()->hasRole('Super Admin') : false)
+            ],
             'ziggy' => function () {
                 return (new Ziggy)->toArray();
             },

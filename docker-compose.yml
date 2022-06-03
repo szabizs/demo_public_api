@@ -56,7 +56,7 @@ services:
         container_name: demo-nginx
         restart: unless-stopped
         ports:
-            - "8020:80"
+            - "80:80"
         depends_on:
             - app
             - mariadb
