@@ -22,7 +22,7 @@ use Inertia\Inertia;
 */
 
 
-Route::domain('admin.apip.test')->get('/', function () {
+Route::domain(config('custom.admin_domain'))->get('/', function () {
     return Inertia::render('Admin/Welcome', [
         'canLogin' => Route::has('admin.login'),
         'canRegister' => Route::has('register'),
@@ -30,7 +30,7 @@ Route::domain('admin.apip.test')->get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
-Route::domain('admin.apip.test')->middleware(['auth', 'verified', 'check_permission'])->group(function() {
+Route::domain(config('custom.admin_domain'))->middleware(['auth', 'verified', 'check_permission'])->group(function() {
     Route::get('/dashboard', function () {
         return Inertia::render('Admin/Dashboard');
     })->name('admin.dashboard');
@@ -45,4 +45,4 @@ Route::domain('admin.apip.test')->middleware(['auth', 'verified', 'check_permiss
     });
 });
 
-Route::domain('admin.apip.test')->get('login', [AuthenticatedSessionController::class, 'create'])->name('admin.login');
+Route::domain(config('custom.admin_domain'))->get('login', [AuthenticatedSessionController::class, 'create'])->name('admin.login');

@@ -21,7 +21,7 @@ use Inertia\Inertia;
 |
 */
 
-Route::domain('apip.test')->get('/', function () {
+Route::domain(config('custom.app_domain'))->get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
@@ -29,7 +29,7 @@ Route::domain('apip.test')->get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
-Route::domain('apip.test')->middleware(['auth', 'verified', 'check_permission'])->group(function() {
+Route::domain(config('custom.app_domain'))->middleware(['auth', 'verified', 'check_permission'])->group(function() {
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
