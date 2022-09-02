@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\PermissionsResourceController;
 use App\Http\Controllers\Admin\RolesResourceController;
 use App\Http\Controllers\Admin\UserResourceController;
 use App\Http\Controllers\Admin\UserTokenGeneratorController;
+use App\Http\Controllers\AttributeController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -22,13 +23,13 @@ use Inertia\Inertia;
 */
 
 Route::domain(config('custom.app_domain'))->get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+    return Inertia::render('Welcome');
+})->name('home');
+
+Route::domain(config('custom.app_domain'))->get('/contact', function () {
+    return Inertia::render('Frontend/Contact');
+})->name('contact');
+
 Route::domain(config('custom.app_domain'))->middleware(['auth', 'verified', 'check_permission'])->group(function() {
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');

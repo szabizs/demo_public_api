@@ -196,8 +196,9 @@ return [
 		App\Providers\RouteServiceProvider::class,
 		\App\Providers\ApiMacroServiceProvider::class,
 
-        Spatie\Permission\PermissionServiceProvider::class,
+		Spatie\Permission\PermissionServiceProvider::class,
 		App\Providers\ObserverServiceProvider::class,
+		App\Providers\RepositoryServiceProvider::class,
 	],
 
     /*

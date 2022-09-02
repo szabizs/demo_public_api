@@ -3,6 +3,9 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Application;
+
 use Inertia\Middleware;
 use Tightenco\Ziggy\Ziggy;
 
@@ -35,6 +38,11 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request)
     {
         return array_merge(parent::share($request), [
+            'canLogin' => Route::has('login'),
+            'canRegister' => Route::has('register'),
+            'laravelVersion' => Application::VERSION,
+            'currentRoute' => Route::current()->getName(),
+            'phpVersion' => PHP_VERSION,
             'auth' => [
                 'user' => $request->user(),
             ],
