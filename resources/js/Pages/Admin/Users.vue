@@ -1,7 +1,6 @@
 <script setup>
 import BreezeAuthenticatedAdminLayout from '@/Layouts/AuthenticatedAdmin.vue';
 import {Head, Link} from '@inertiajs/inertia-vue3';
-import icon from "@/Shared/Icon";
 </script>
 
 <template>

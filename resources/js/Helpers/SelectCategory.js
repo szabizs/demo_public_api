@@ -9,14 +9,6 @@ export function useSelectCategory(category) {
             store.selectedParentCategory = category
         }
     }
-
-    // if(store.selectedCategory.id === category.id) {
-    //     store.selectedCategory = {}
-    // } else {
-        // if(category.children_recursive.length === 0) {
-        // }
-    // }
-
     if(!store.selectedCategoryNodes.includes(category.id)) {
         store.selectedCategoryNodes.push(category.id)
     } else {

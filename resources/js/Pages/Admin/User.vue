@@ -1,67 +1,3 @@
-<script setup>
-
-import BreezeInput from '@/Components/Input.vue';
-import BreezeLabel from '@/Components/Label.vue';
-import BreezeButton from '@/Components/Button.vue';
-import BreezeCheckbox from '@/Components/Checkbox.vue';
-import BreezeAuthenticatedAdminLayout from '@/Layouts/AuthenticatedAdmin.vue';
-import LoadingButton from '@/Shared/LoadingButton';
-import BreezeValidationErrors from '@/Components/ValidationErrors.vue';
-import {useForm, usePage, Link, Head} from "@inertiajs/inertia-vue3";
-import {computed} from "vue";
-
-const props = defineProps({
-    user: {
-        type: Object
-    },
-    allPermissions: {
-        type: Array
-    },
-    userPermissions: {
-        type: Array
-    },
-    allRoles: {
-        type: Array
-    },
-    userRoles: {
-        type: Array
-    },
-})
-
-const errors = computed(() => usePage().props.value.errors);
-const hasErrors = computed(() => Object.keys(errors.value).length > 0);
-
-const apiGeneratorLabel = computed(() => props.user.api_token !== null ? 'regenerate' : 'generate')
-
-const title = computed(() => `Users / ${props.user.name}`)
-
-const form = useForm({
-    name: props.user.name,
-    email: props.user.email,
-    password: '',
-    permissions: props.userPermissions,
-    roles: props.userRoles,
-});
-
-const destroy = () => {
-    if (confirm('Are you sure you want to delete this user?')) {
-        form.delete(route('admin.users.destroy', {user: props.user}))
-    }
-}
-
-const submit = () => {
-    form.patch(route('admin.users.update', {user: props.user}), {
-        onFinish: () => form.reset('password')
-    })
-}
-
-const generateToken = () => {
-    form.post(route('admin.users.generate_token', {user: props.user}))
-}
-
-
-</script>
-
 <template>
     <Head :title="title" />
     <BreezeAuthenticatedAdminLayout>
@@ -144,10 +80,70 @@ const generateToken = () => {
     </BreezeAuthenticatedAdminLayout>
 </template>
 
-<script>
+<script setup>
+
+import BreezeInput from '@/Components/Input.vue';
+import BreezeLabel from '@/Components/Label.vue';
+import BreezeButton from '@/Components/Button.vue';
+import BreezeCheckbox from '@/Components/Checkbox.vue';
+import BreezeAuthenticatedAdminLayout from '@/Layouts/AuthenticatedAdmin.vue';
+import LoadingButton from '@/Shared/LoadingButton';
+import BreezeValidationErrors from '@/Components/ValidationErrors.vue';
+import {useForm, usePage, Link, Head} from "@inertiajs/inertia-vue3";
+import {computed} from "vue";
+
+const props = defineProps({
+    user: {
+        type: Object
+    },
+    allPermissions: {
+        type: Array
+    },
+    userPermissions: {
+        type: Array
+    },
+    allRoles: {
+        type: Array
+    },
+    userRoles: {
+        type: Array
+    },
+})
+
+const errors = computed(() => usePage().props.value.errors);
+const hasErrors = computed(() => Object.keys(errors.value).length > 0);
+
+const apiGeneratorLabel = computed(() => props.user.api_token !== null ? 'regenerate' : 'generate')
+
+const title = computed(() => `Users / ${props.user.name}`)
+
+const form = useForm({
+    name: props.user.name,
+    email: props.user.email,
+    password: '',
+    permissions: props.userPermissions,
+    roles: props.userRoles,
+});
+
+const destroy = () => {
+    if (confirm('Are you sure you want to delete this user?')) {
+        form.delete(route('admin.users.destroy', {user: props.user}))
+    }
+}
+
+const submit = () => {
+    form.patch(route('admin.users.update', {user: props.user}), {
+        onFinish: () => form.reset('password')
+    })
+}
+
+const generateToken = () => {
+    form.post(route('admin.users.generate_token', {user: props.user}))
+}
 
 
 </script>
+
 
 <style scoped>
 

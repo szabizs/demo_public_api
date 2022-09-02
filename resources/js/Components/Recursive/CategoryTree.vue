@@ -1,11 +1,3 @@
-<script setup>
-import {store} from "@/store";
-import {useSelectCategory} from "@/Helpers/SelectCategory";
-import IconDown from "@/Components/Icons/Down";
-import IconUp from "@/Components/Icons/Up";
-
-</script>
-
 <template>
     <ul role="menu" :style="style">
         <li v-for="category in tree.children_recursive" :key="category.id" :class="{ 'text-blue-800': tree.children_recursive !== undefined }">
@@ -23,29 +15,35 @@ import IconUp from "@/Components/Icons/Up";
     </ul>
 </template>
 
-<script>
+<script setup>
 
-export default {
-    name: "CategoryTree",
-    props: {
-        tree: {
-            type: Object
-        },
-        indent: {
-            type: Number
-        }
+import {store} from "@/store";
+import {useSelectCategory} from "@/Helpers/SelectCategory";
+import IconDown from "@/Components/Icons/Down";
+import IconUp from "@/Components/Icons/Up";
+
+import { ref, computed } from 'vue'
+
+const props = defineProps({
+    tree: {
+        type: Object
     },
-    computed: {
-        newIndent() {
-            return this.indent
-        },
-        style() {
-            return {
-                'margin-left': this.indent + 'px'
-            }
-        }
+    indent: {
+        type: Number
     }
-}
+})
+
+const indent = ref(15)
+
+const newIndent = computed(() => {
+    return indent.value
+})
+
+const style = computed(() => {
+    return {
+        'margin-left': '5px'
+    }
+})
 </script>
 <style scoped>
 

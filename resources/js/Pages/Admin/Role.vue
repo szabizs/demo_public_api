@@ -1,55 +1,3 @@
-<script setup>
-
-import BreezeInput from '@/Components/Input.vue';
-import BreezeLabel from '@/Components/Label.vue';
-import BreezeButton from '@/Components/Button.vue';
-import LoadingButton from "@/Shared/LoadingButton";
-import BreezeCheckbox from '@/Components/Checkbox.vue';
-import BreezeAuthenticatedAdminLayout from '@/Layouts/AuthenticatedAdmin.vue';
-import BreezeValidationErrors from '@/Components/ValidationErrors.vue';
-import {useForm, usePage, Link, Head} from "@inertiajs/inertia-vue3";
-import {computed} from "vue";
-
-const props = defineProps({
-    role: {
-        type: Object
-    },
-    users: {
-        type: Array
-    },
-    allPermissions: {
-        type: Array
-    },
-    rolePermissions: {
-        type: Array
-    },
-})
-
-const form = useForm({
-    name: props.role.name,
-    users: props.role.users,
-    permissions: props.rolePermissions
-});
-
-const errors = computed(() => usePage().props.value.errors);
-const hasErrors = computed(() => Object.keys(errors.value).length > 0);
-
-const destroy = (user) => {
-    if (confirm('Are you sure you want to delete this role?')) {
-        form.delete(route('admin.roles.destroy', {role: props.role}))
-    }
-}
-
-const submit = () => {
-    form.patch(route('admin.roles.update', {role: props.role}))
-}
-
-const title = () => {
-    return `Roles / ${props.role.name}`
-}
-
-</script>
-
 <template>
     <Head :title="title()" />
     <BreezeAuthenticatedAdminLayout>
@@ -112,3 +60,55 @@ const title = () => {
         </div>
     </BreezeAuthenticatedAdminLayout>
 </template>
+
+<script setup>
+
+import BreezeInput from '@/Components/Input.vue';
+import BreezeLabel from '@/Components/Label.vue';
+import BreezeButton from '@/Components/Button.vue';
+import LoadingButton from "@/Shared/LoadingButton";
+import BreezeCheckbox from '@/Components/Checkbox.vue';
+import BreezeAuthenticatedAdminLayout from '@/Layouts/AuthenticatedAdmin.vue';
+import BreezeValidationErrors from '@/Components/ValidationErrors.vue';
+import {useForm, usePage, Link, Head} from "@inertiajs/inertia-vue3";
+import {computed} from "vue";
+
+const props = defineProps({
+    role: {
+        type: Object
+    },
+    users: {
+        type: Array
+    },
+    allPermissions: {
+        type: Array
+    },
+    rolePermissions: {
+        type: Array
+    },
+})
+
+const form = useForm({
+    name: props.role.name,
+    users: props.role.users,
+    permissions: props.rolePermissions
+});
+
+const errors = computed(() => usePage().props.value.errors);
+const hasErrors = computed(() => Object.keys(errors.value).length > 0);
+
+const destroy = (user) => {
+    if (confirm('Are you sure you want to delete this role?')) {
+        form.delete(route('admin.roles.destroy', {role: props.role}))
+    }
+}
+
+const submit = () => {
+    form.patch(route('admin.roles.update', {role: props.role}))
+}
+
+const title = () => {
+    return `Roles / ${props.role.name}`
+}
+
+</script>
