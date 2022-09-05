@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\StoreAttributeRequest;
 use App\Http\Requests\Admin\UpdateAttributeRequest;
 use App\Models\Attribute;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 
 class AttributeController extends Controller
@@ -21,10 +22,10 @@ class AttributeController extends Controller
 
     public function index()
 	{
-        $attributes = $this->attributeRepository->filter(\Illuminate\Support\Facades\Request::all('search', 'trashed'))->get(['id', 'name', 'frontend_type', 'is_filterable', 'is_required', 'deleted_at']);
+        $attributes = $this->attributeRepository->filter(Request::all('search', 'trashed'))->get(['id', 'name', 'frontend_type', 'is_filterable', 'is_required', 'deleted_at']);
 
         return Inertia::render('Admin/Attributes/ListAttributes', [
-            'filters' => \Illuminate\Support\Facades\Request::all('search', 'trashed'),
+            'filters' => Request::all('search', 'trashed'),
             'attributes' => $attributes
         ]);
 	}

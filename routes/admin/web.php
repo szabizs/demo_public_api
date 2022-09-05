@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\UserTokenGeneratorController;
 use App\Http\Controllers\Admin\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\AttributeController;
 use App\Http\Controllers\AttributeValueController;
+use App\Http\Controllers\BrandController;
 use App\Http\Controllers\ProductResourceController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -48,6 +49,10 @@ Route::domain(config('custom.admin_domain'))->middleware(['auth', 'verified', 'c
             Route::post('/update-values', [AttributeValueController::class, 'updateValues'])->name('.update-values');
             Route::delete('/delete-values/{attributeValue}', [AttributeValueController::class, 'destroyValues'])->name('.delete-values');
         });
+
+        // Brand routess
+        Route::resource('brands', BrandController::class);
+        Route::delete('brands/logo/{brand}', [BrandController::class, 'deleteLogo'])->name('brands.logo.destroy');
 
 
         Route::resource('categories', CategoryResourceController::class);

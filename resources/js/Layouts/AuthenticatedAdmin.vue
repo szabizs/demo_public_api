@@ -54,6 +54,9 @@ const showingNavigationDropdown = ref(false);
                                                 <BreezeDropdownLink :href="route('admin.attributes.index')" :active="route().current('admin.attributes.*')">
                                                     Attributes
                                                 </BreezeDropdownLink>
+                                                <BreezeDropdownLink :href="route('admin.brands.index')" :active="route().current('admin.brands.*')">
+                                                    Brands
+                                                </BreezeDropdownLink>
                                             </template>
                                         </BreezeDropdown>
                                     </div>

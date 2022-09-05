@@ -136,7 +136,7 @@ const data = reactive({
 })
 
 const navigation = [
-    { name: 'Attributes', icon: HomeIcon, href: '#', code: 'attribute' },
+    { name: 'Attribute', icon: HomeIcon, href: '#', code: 'attribute' },
     { name: 'Option values', icon: FilterIcon, href: '#', code: 'attribute-values' },
 ]
 
@@ -167,8 +167,22 @@ const destroy = () => {
 }
 
 const submit = () => {
-    form.patch(route('admin.attributes.update', {attribute: props.attribute}), {
-        onFinish: () => form.reset()
+    // form.patch(route('admin.attributes.update', {attribute: props.attribute}), {
+    //     onFinish: () => form.reset()
+    // })
+
+    axios.post(route('admin.attributes.update', {attribute: props.attribute}), {
+        form,
+    }).then((response) => {
+        // attributeValues.value[newValue.key] = response.data.value
+
+        showNotification.value = true
+        notificationContent.value.type = 'success'
+        notificationContent.value.timeoutInSeconds = 3
+        notificationContent.value.title = 'Information'
+        notificationContent.value.description = 'The attribute option has been successfully updated.'
+
+        reset()
     })
 }
 
