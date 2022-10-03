@@ -9,7 +9,8 @@ use App\Http\Controllers\Admin\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\AttributeController;
 use App\Http\Controllers\AttributeValueController;
 use App\Http\Controllers\BrandController;
-use App\Http\Controllers\ProductResourceController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductImagesController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -54,9 +55,15 @@ Route::domain(config('custom.admin_domain'))->middleware(['auth', 'verified', 'c
         Route::resource('brands', BrandController::class);
         Route::delete('brands/logo/{brand}', [BrandController::class, 'deleteLogo'])->name('brands.logo.destroy');
 
+        // Product routes
+        Route::resource('products', ProductController::class);
+        Route::post('products/images/upload/{product_id}', [ProductImagesController::class, 'upload'])->name('products.images.store');
+        Route::delete('products/images/delete/{product_id}/{image_id}', [ProductImagesController::class, 'deleteImage'])->name('products.images.delete');
+        Route::post('products/images/set-main/{product_id}/{image_id}', [ProductImagesController::class, 'setAsMain'])->name('products.images.set-main');
+
+
 
         Route::resource('categories', CategoryResourceController::class);
-        Route::resource('products', ProductResourceController::class);
         Route::resource('users', UserResourceController::class);
         Route::post('users/{user}/generate-token', UserTokenGeneratorController::class)->name('users.generate_token');
         Route::resource('permissions', PermissionsResourceController::class);

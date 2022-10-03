@@ -28,8 +28,8 @@ class BrandRepository extends BaseRepository implements BrandContract
 
 	public function listBrands(string $order = 'id', string $sort = 'desc', array $columns = ['*'])
 	{
-		// TODO: Implement listBrands() method.
-	}
+        return $this->all($columns, $order, $sort);
+    }
 
 	public function findBrandById(int $id)
 	{

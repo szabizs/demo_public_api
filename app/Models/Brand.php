@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Casts\Name;
 use App\Traits\FilterableModel;
 use Illuminate\Database\Eloquent\Casts\Attribute as CastableAttribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Str;
 
@@ -12,6 +13,7 @@ class Brand extends Model
 {
 
     use FilterableModel;
+    use HasFactory;
 
     protected $table = 'brands';
 
@@ -64,4 +66,8 @@ class Brand extends Model
         );
     }
 
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 }

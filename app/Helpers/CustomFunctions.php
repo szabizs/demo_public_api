@@ -4,7 +4,8 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 if(!function_exists('getEnumValues')) {
-    function getEnumValues($table, $column) {
+    function getEnumValues($table, $column): array
+    {
         $type = DB::select(DB::raw("SHOW COLUMNS FROM $table WHERE Field = '{$column}'"))[0]->Type ;
 
         preg_match('/^enum\((.*)\)$/', $type, $matches);
